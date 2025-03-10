@@ -50,9 +50,9 @@ module mul #(parameter XLEN) (
   assign BP = ForwardedSrcBE[XLEN-2:0];
   assign Bm = ForwardedSrcBE[XLEN-1];
 
-  assign PP = AP * BP;
-  assign PA = Ap ? Bm : '0;  
-  assign PB = Bp ? Am : '0;
+  assign PP = APrime * BPrime;
+  assign PA = Bm ? APrime : '0;  
+  assign PB = Am ? BPrime : '0;
   assign Pm = Am * Bm;
 
 
