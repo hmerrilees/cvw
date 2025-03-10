@@ -38,12 +38,11 @@ module mul #(parameter XLEN) (
   logic [XLEN-1:0]    Aprime, Bprime;                       // lower bits of source A and B
   logic               MULH, MULHSU;                         // type of multiply
   logic [XLEN-2:0]    PA, PB;                               // product of msb and lsbs
-  logic               PP;                                   // product of msbs
-
-  logic               Am, Bm, Pm;
-
   logic [XLEN*2-1:0]  PP1E, PP2E, PP3E, PP4E;               // partial products
   logic [XLEN*2-1:0]  PP1M, PP2M, PP3M, PP4M;               // registered partial proudcts
+
+  logic               Am, Bm, Pm;                           // MSB of A, B; their product
+ 
  
   //////////////////////////////
   // Execute Stage: Compute partial products
@@ -53,7 +52,7 @@ module mul #(parameter XLEN) (
   assign Bprime = ForwardedSrcBE[XLEN-2:0];
   assign Bm = ForwardedSrcBE[XLEN-1];
 
-  assign PP = Aprime * Bprime;
+  assign PP1E = Aprime * Bprime;
   assign PA = Bm ? Aprime : '0;  
   assign PB = Am ? Bprime : '0;
   assign Pm = Am * Bm;
@@ -63,7 +62,6 @@ module mul #(parameter XLEN) (
     case(Funct3E)
       // Signed X Signed
       3'b001: begin
-        PP1E = PP;
         PP2E = (~PA) << (XLEN - 1);
         PP3E = (~PB) << (XLEN - 1);
         PP4E = (1 << (2*XLEN - 1)) | (Pm << (2*XLEN - 2)) | (1 << XLEN);
@@ -71,7 +69,6 @@ module mul #(parameter XLEN) (
 
       // Signed X Unsigned
       3'b010: begin
-        PP1E = PP;
         PP2E = (~PA) << (XLEN - 1);
         PP3E = PB << (XLEN - 1);
         PP4E = (1 << (2*XLEN - 1)) | ((~Pm) << (2*XLEN - 2)) | (1 << (XLEN-1));
@@ -79,7 +76,6 @@ module mul #(parameter XLEN) (
 
       // Unsigned X Unsigned (both mul (000) and mulh (011))
       default: begin
-        PP1E = PP;
         PP2E = PA << (XLEN - 1);
         PP3E = PB << (XLEN - 1);
         PP4E = (1 << (2*XLEN - 1)) | (Pm << (2*XLEN - 2));
