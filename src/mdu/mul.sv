@@ -58,28 +58,27 @@ module mul #(parameter XLEN) (
   assign Pm = Am * Bm;
 
 
-  always_comb begin
+  always_comb
     case(Funct3E)
      // Signed X Signed
       3'b001: begin
         PP2E = {2'b00, ~PA, {(XLEN - 1){1'b0}}}; // ~PA << N-1
         PP3E = {2'b00, ~PB, {(XLEN - 1){1'b0}}}; // ~PB << N-1
-        PP4E = {1'b1, Pm, {(XLEN - 3){1'b0}}, 1'b1, {(XLEN){1'b0}}}; // (1 << (2*XLEN - 1)) | (Pm << (2XLEN - 2)) | (1 << XLEN);
+        PP4E = {1'b1, Pm, {(XLEN - 3){1'b0}}, 1'b1, {(XLEN){1'b0}}}; // (1 << (2*XLEN - 1)) | (Pm << (2XLEN - 2)) | (1 << XLEN)
       end
       // Signed X Unsigned
       3'b010: begin
         PP2E = {2'b00, ~PA, {(XLEN - 1){1'b0}}}; // ~PA << N-1
         PP3E = {2'b00, PB, {(XLEN - 1){1'b0}}}; // PB << N-1
-        PP4E = {1'b1, ~Pm, {(XLEN - 2){1'b0}}, 1'b1, {(XLEN - 1){1'b0}}}; // (1 << (2*XLEN - 1)) | (Pm << (2XLEN - 2)) | (1 << XLEN);
+        PP4E = {1'b1, ~Pm, {(XLEN - 2){1'b0}}, 1'b1, {(XLEN - 1){1'b0}}}; // (1 << (2*XLEN - 1)) | (Pm << (2XLEN - 2)) | (1 << XLEN)
       end
       // Unsigned X Unsigned (both mul (000) and mulh (011))
       default: begin
         PP2E = PA << (XLEN - 1); // PA << N-1
         PP3E = PB << (XLEN - 1); // PB << N-1
-        PP4E = {1'b0, Pm, {(2*XLEN - 2){1'b0}}} // (Pm << (2*XLEN - 2));
+        PP4E = {1'b0, Pm, {(2*XLEN - 2){1'b0}}}; // (Pm << (2*XLEN - 2))
       end
     endcase
-  end
 
   // Memory Stage: Sum partial proudcts
   //////////////////////////////
