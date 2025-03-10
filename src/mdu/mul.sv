@@ -40,7 +40,6 @@ module mul #(parameter XLEN) (
   logic [XLEN-2:0]    PA, PB;                               // product of msb and lsbs
   logic               PP;                                   // product of msbs
 
-  logic [XLEN-1:0]    AP, BP;
   logic               Am, Bm, Pm;
 
   logic [XLEN*2-1:0]  PP1E, PP2E, PP3E, PP4E;               // partial products
@@ -49,9 +48,9 @@ module mul #(parameter XLEN) (
   //////////////////////////////
   // Execute Stage: Compute partial products
   //////////////////////////////
-  assign AP = ForwardedSrcAE[XLEN-2:0];
+  assign Aprime = ForwardedSrcAE[XLEN-2:0];
   assign Am = ForwardedSrcAE[XLEN-1];
-  assign BP = ForwardedSrcBE[XLEN-2:0];
+  assign Bprime = ForwardedSrcBE[XLEN-2:0];
   assign Bm = ForwardedSrcBE[XLEN-1];
 
   assign PP = Aprime * Bprime;
