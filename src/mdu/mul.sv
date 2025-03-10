@@ -47,14 +47,15 @@ module mul #(parameter XLEN) (
   //////////////////////////////
   // Execute Stage: Compute partial products
   //////////////////////////////
-  assign Aprime = ForwardedSrcAE[XLEN-2:0];
+  // lint was complaining about width, hence appended 0's
+  assign Aprime = {1'b0, ForwardedSrcAE[XLEN-2:0]};
   assign Am = ForwardedSrcAE[XLEN-1];
-  assign Bprime = ForwardedSrcBE[XLEN-2:0];
+  assign Bprime = {1'b0, ForwardedSrcBE[XLEN-2:0]};
   assign Bm = ForwardedSrcBE[XLEN-1];
 
   assign PP1E = Aprime * Bprime;
-  assign PA = Bm ? Aprime : '0;  
-  assign PB = Am ? Bprime : '0;
+  assign PA = Bm ? Aprime : {(XLEN-1){1'0}};  
+  assign PB = Am ? Bprime : {(XLEN-1){1'0}};
   assign Pm = Am * Bm;
 
 
