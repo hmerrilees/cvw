@@ -74,8 +74,8 @@ module mul #(parameter XLEN) (
       end
       // Unsigned X Unsigned (both mul (000) and mulh (011))
       default: begin
-        PP2E = PA << (XLEN - 1); // PA << N-1
-        PP3E = PB << (XLEN - 1); // PB << N-1
+        PP2E = {2'b00, PA, {(XLEN - 1){1'b0}}}; // PA << N-1
+        PP3E = {2'b00, PB, {(XLEN - 1){1'b0}}}; // PB << N-1
         PP4E = {1'b0, Pm, {(2*XLEN - 2){1'b0}}}; // (Pm << (2*XLEN - 2))
       end
     endcase
