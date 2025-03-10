@@ -35,10 +35,14 @@ module mul #(parameter XLEN) (
   output logic [XLEN*2-1:0]   ProdM                           // double-widthproduct
 );
 
-    logic [XLEN-1:0]    Aprime, Bprime;                       // lower bits of source A and B
+  logic [XLEN-1:0]    Aprime, Bprime;                       // lower bits of source A and B
   logic               MULH, MULHSU;                         // type of multiply
   logic [XLEN-2:0]    PA, PB;                               // product of msb and lsbs
   logic               PP;                                   // product of msbs
+
+  logic [XLEN-1:0]    AP, BP;
+  logic               Am, Bm, Pm;
+
   logic [XLEN*2-1:0]  PP1E, PP2E, PP3E, PP4E;               // partial products
   logic [XLEN*2-1:0]  PP1M, PP2M, PP3M, PP4M;               // registered partial proudcts
  
@@ -63,7 +67,7 @@ module mul #(parameter XLEN) (
         PP1E = PP;
         PP2E = (~PA) << (XLEN - 1);
         PP3E = (~PB) << (XLEN - 1);
-        PP4E = (1 << (2*XLEN - 1)) | (PP << (2*XLEN - 2)) | (1 << XLEN);
+        PP4E = (1 << (2*XLEN - 1)) | (Pm << (2*XLEN - 2)) | (1 << XLEN);
       end
 
       // Signed X Unsigned
@@ -71,7 +75,7 @@ module mul #(parameter XLEN) (
         PP1E = PP;
         PP2E = (~PA) << (XLEN - 1);
         PP3E = PB << (XLEN - 1);
-        PP4E = (1 << (2*XLEN - 1)) | ((~PP) << (2*XLEN - 2)) | (1 << (XLEN-1));
+        PP4E = (1 << (2*XLEN - 1)) | ((~Pm) << (2*XLEN - 2)) | (1 << (XLEN-1));
       end
 
       // Unsigned X Unsigned (both mul (000) and mulh (011))
@@ -79,7 +83,7 @@ module mul #(parameter XLEN) (
         PP1E = PP;
         PP2E = PA << (XLEN - 1);
         PP3E = PB << (XLEN - 1);
-        PP4E = (1 << (2*XLEN - 1)) | (PP << (2*XLEN - 2));
+        PP4E = (1 << (2*XLEN - 1)) | (Pm << (2*XLEN - 2));
       end
     endcase
   end
