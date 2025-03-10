@@ -53,8 +53,8 @@ module mul #(parameter XLEN) (
   assign Bm = ForwardedSrcBE[XLEN-1];
 
   assign PP1E = Aprime * Bprime;
-  assign PA = Bm ? Aprime : {(XLEN - 1){1'b0}};  
-  assign PB = Am ? Bprime : {(XLEN - 1){1'b0}};
+  assign PA = Bm ? Aprime[XLEN-2:0] : {(XLEN - 1){1'b0}};  
+  assign PB = Am ? Bprime[XLEN-2:0] : {(XLEN - 1){1'b0}};
   assign Pm = Am * Bm;
 
 
